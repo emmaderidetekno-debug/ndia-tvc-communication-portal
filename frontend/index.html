@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ndia TVC Communication Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN SCREEN
+========================= -->
+
+<div id="loginScreen" class="login-screen">
+
+    <div class="login-card">
+
+        <div class="login-logo">N</div>
+
+        <h1>Ndia TVC</h1>
+        <p>Communication Portal</p>
+
+        <form id="loginForm">
+
+            <div class="form-group">
+                <label>Username</label>
+                <input
+                    type="text"
+                    id="loginUsername"
+                    placeholder="Enter username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Enter password"
+                    required
+                >
+            </div>
+
+            <button class="primary-btn full-btn" type="submit">
+                Sign In
+            </button>
+
+            <p id="loginError" class="login-error"></p>
+
+        </form>
+
+        <div class="demo-login">
+            <strong>Demo accounts</strong>
+            <small>admin / admin123</small>
+            <small>officer / officer123</small>
+            <small>student / student123</small>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     APPLICATION
+========================= -->
+
+<div id="app" class="app hidden">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">N</div>
+
+            <div>
+                <h2>Ndia TVC</h2>
+                <span>Communication Portal</span>
+            </div>
+
+        </div>
+
+        <nav class="navigation">
+
+            <button class="nav-item active" data-section="dashboard">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </button>
+
+            <button class="nav-item" data-section="announcements">
+                <span class="nav-icon">📢</span>
+                <span>Announcements</span>
+            </button>
+
+            <button class="nav-item" data-section="students">
+                <span class="nav-icon">🎓</span>
+                <span>Students</span>
+            </button>
+
+            <button class="nav-item" data-section="staff">
+                <span class="nav-icon">👥</span>
+                <span>Staff</span>
+            </button>
+
+            <button class="nav-item" data-section="messages">
+                <span class="nav-icon">✉</span>
+                <span>Messages</span>
+            </button>
+
+            <button class="nav-item" data-section="reports">
+                <span class="nav-icon">📊</span>
+                <span>Reports</span>
+            </button>
+
+            <button class="nav-item" data-section="accounts">
+                <span class="nav-icon">🔐</span>
+                <span>Accounts</span>
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="system-status" id="systemStatus">
+                <span class="status-dot"></span>
+                Backend connected
+            </div>
+
+            <div class="user-card">
+
+                <div class="avatar" id="sidebarAvatar">CO</div>
+
+                <div>
+                    <strong id="sidebarUserName">
+                        Communication Officer
+                    </strong>
+
+                    <small id="sidebarUserRole">
+                        Administrator
+                    </small>
+                </div>
+
+            </div>
+
+            <button id="logoutBtn" class="logout-btn">
+                ⇥ Sign Out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <p class="welcome-small">
+                    NDIA TECHNICAL & VOCATIONAL COLLEGE
+                </p>
+
+                <h1 id="pageTitle">Dashboard</h1>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="date-display" id="currentDate"></div>
+
+                <button class="notification-btn">
+                    🔔
+                    <span id="notificationBadge"
+                          class="notification-badge">0</span>
+                </button>
+
+                <div class="avatar" id="topAvatar">CO</div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             DASHBOARD
+        ========================= -->
+
+        <section id="dashboard"
+                 class="page-section active-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>
+                        Welcome back,
+                        <span id="dashboardUserName">
+                            Communication Officer
+                        </span>
+                        👋
+                    </h2>
+
+                    <p>
+                        Manage college communication from one central portal.
+                    </p>
+                </div>
+
+                <button class="primary-btn"
+                        id="dashboardAnnouncementBtn">
+                    + New Announcement
+                </button>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">📢</div>
+                    <div>
+                        <span>Total Announcements</span>
+                        <strong id="announcementCount">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">🎓</div>
+                    <div>
+                        <span>Students</span>
+                        <strong id="studentCount">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">👥</div>
+                    <div>
+                        <span>Staff Members</span>
+                        <strong id="staffCount">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">✉</div>
+                    <div>
+                        <span>Messages</span>
+                        <strong id="messageCount">0</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-grid">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <h3>Recent Announcements</h3>
+                            <p>Latest college communication</p>
+                        </div>
+
+                        <button class="text-btn"
+                                data-section-link="announcements">
+                            View All
+                        </button>
+
+                    </div>
+
+                    <div id="dashboardAnnouncements"
+                         class="announcement-list">
+                    </div>
+
+                </div>
+
+
+                <div class="panel quick-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Quick Actions</h3>
+                            <p>Common administrative tasks</p>
+                        </div>
+                    </div>
+
+                    <button class="quick-action"
+                            id="quickAnnouncement">
+
+                        <span>📢</span>
+
+                        <div>
+                            <strong>Create Announcement</strong>
+                            <small>
+                                Send information to students and staff
+                            </small>
+                        </div>
+
+                    </button>
+
+
+                    <button class="quick-action"
+                            data-section-link="students">
+
+                        <span>🎓</span>
+
+                        <div>
+                            <strong>Student Directory</strong>
+                            <small>Manage student records</small>
+                        </div>
+
+                    </button>
+
+
+                    <button class="quick-action"
+                            data-section-link="staff">
+
+                        <span>👥</span>
+
+                        <div>
+                            <strong>Staff Directory</strong>
+                            <small>Manage staff records</small>
+                        </div>
+
+                    </button>
+
+
+                    <button class="quick-action"
+                            data-section-link="reports">
+
+                        <span>📊</span>
+
+                        <div>
+                            <strong>Communication Reports</strong>
+                            <small>Review portal statistics</small>
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ANNOUNCEMENTS
+        ========================= -->
+
+        <section id="announcements" class="page-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Announcements</h2>
+                    <p>
+                        Create and manage official college announcements.
+                    </p>
+                </div>
+
+                <button class="primary-btn"
+                        id="newAnnouncementBtn">
+                    + New Announcement
+                </button>
+
+            </div>
+
+
+            <div class="toolbar">
+
+                <div class="search-box">
+                    🔍
+                    <input id="announcementSearch"
+                           placeholder="Search announcements...">
+                </div>
+
+                <select id="announcementFilter">
+
+                    <option value="all">
+                        All Announcements
+                    </option>
+
+                    <option value="general">General</option>
+                    <option value="academic">Academic</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="event">Events</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div id="fullAnnouncementList"
+                     class="announcement-list">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             STUDENTS
+        ========================= -->
+
+        <section id="students" class="page-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Students</h2>
+                    <p>Student communication directory.</p>
+                </div>
+
+                <button class="primary-btn"
+                        id="addStudentBtn">
+                    + Add Student
+                </button>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">🎓</div>
+                    <div>
+                        <span>Total Students</span>
+                        <strong id="studentTotal">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">✓</div>
+                    <div>
+                        <span>Active</span>
+                        <strong id="activeStudentCount">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">📨</div>
+                    <div>
+                        <span>Reachable</span>
+                        <strong id="studentReach">0%</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="toolbar">
+
+                <div class="search-box">
+                    🔍
+                    <input id="studentSearch"
+                           placeholder="Search students...">
+                </div>
+
+                <select id="studentDepartmentFilter">
+                    <option value="all">All Departments</option>
+                    <option>ICT</option>
+                    <option>Mechanical & Automotive</option>
+                    <option>Electrical</option>
+                    <option>Building & Civil Engineering</option>
+                    <option>Agriculture</option>
+                    <option>Cosmetology</option>
+                    <option>Fashion & Design</option>
+                    <option>Hospitality</option>
+                    <option>Business</option>
+                </select>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Name</th>
+                                <th>Admission No.</th>
+                                <th>Department</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="studentTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             STAFF
+        ========================= -->
+
+        <section id="staff" class="page-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Staff</h2>
+                    <p>College staff communication directory.</p>
+                </div>
+
+                <button class="primary-btn"
+                        id="addStaffBtn">
+                    + Add Staff
+                </button>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">👥</div>
+                    <div>
+                        <span>Total Staff</span>
+                        <strong id="staffTotal">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">✓</div>
+                    <div>
+                        <span>Active</span>
+                        <strong id="activeStaffCount">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">🏢</div>
+                    <div>
+                        <span>Departments</span>
+                        <strong>9</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="toolbar">
+
+                <div class="search-box">
+                    🔍
+                    <input id="staffSearch"
+                           placeholder="Search staff...">
+                </div>
+
+                <select id="staffDepartmentFilter">
+
+                    <option value="all">
+                        All Departments
+                    </option>
+
+                    <option>ICT</option>
+                    <option>Mechanical & Automotive</option>
+                    <option>Electrical</option>
+                    <option>Building & Civil Engineering</option>
+                    <option>Agriculture</option>
+                    <option>Cosmetology</option>
+                    <option>Fashion & Design</option>
+                    <option>Hospitality</option>
+                    <option>Business</option>
+                    <option>Administration</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Department</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="staffTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             MESSAGES
+        ========================= -->
+
+        <section id="messages" class="page-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Messages</h2>
+                    <p>Manage communication and support requests.</p>
+                </div>
+
+                <button class="primary-btn"
+                        id="newMessageBtn">
+                    + New Message
+                </button>
+
+            </div>
+
+
+            <div class="message-layout">
+
+                <div class="panel message-list-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Inbox</h3>
+                            <p>Recent messages</p>
+                        </div>
+                    </div>
+
+                    <div id="messageList"></div>
+
+                </div>
+
+
+                <div class="panel message-info"
+                     id="messageInfo">
+
+                    <div class="empty-state">
+                        <div>💬</div>
+                        <h3>Select a message</h3>
+                        <p>
+                            Choose a message from your inbox.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             REPORTS
+        ========================= -->
+
+        <section id="reports" class="page-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Reports</h2>
+                    <p>Communication performance and activity.</p>
+                </div>
+
+                <button class="secondary-btn"
+                        id="generateReportBtn">
+                    Generate Report
+                </button>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">📢</div>
+                    <div>
+                        <span>Announcements</span>
+                        <strong id="reportAnnouncementCount">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">🎓</div>
+                    <div>
+                        <span>Students</span>
+                        <strong id="reportStudentCount">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">👥</div>
+                    <div>
+                        <span>Staff</span>
+                        <strong id="reportStaffCount">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">✉</div>
+                    <div>
+                        <span>Messages</span>
+                        <strong id="reportMessageCount">0</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h3>Communication Overview</h3>
+                        <p>Current portal activity</p>
+                    </div>
+                </div>
+
+                <div class="report-bars">
+
+                    <div class="report-row">
+
+                        <span>Announcements</span>
+
+                        <div class="bar">
+                            <div class="bar-fill"
+                                 id="announcementBar"></div>
+                        </div>
+
+                        <strong id="announcementBarValue">0</strong>
+
+                    </div>
+
+
+                    <div class="report-row">
+
+                        <span>Student Reach</span>
+
+                        <div class="bar">
+                            <div class="bar-fill" id="studentReachBar"
+                                 style="width:0%">
+                            </div>
+                        </div>
+
+                        <strong id="reportStudentReach">0%</strong>
+
+                    </div>
+
+
+                    <div class="report-row">
+
+                        <span>Staff Reach</span>
+
+                        <div class="bar">
+
+                            <div class="bar-fill" id="staffReachBar"
+                                 style="width:0%">
+                            </div>
+
+                        </div>
+
+                        <strong id="reportStaffReach">0%</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ACCOUNTS
+        ========================= -->
+
+        <section id="accounts" class="page-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Accounts & Roles</h2>
+                    <p>Manage portal users and access levels.</p>
+                </div>
+
+                <button class="primary-btn"
+                        id="addAccountBtn">
+                    + Add Account
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="accountTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     ANNOUNCEMENT MODAL
+========================= -->
+
+<div class="modal-overlay" id="announcementModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>New Announcement</h2>
+                <p>Publish official college communication.</p>
+            </div>
+
+            <button class="close-btn"
+                    id="closeAnnouncementModal">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="announcementForm">
+
+            <div class="form-group">
+
+                <label>
+                    Title <span>*</span>
+                </label>
+
+                <input id="announcementTitle"
+                       required
+                       placeholder="Announcement title">
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>Category</label>
+
+                    <select id="announcementCategory">
+
+                        <option value="general">General</option>
+                        <option value="academic">Academic</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="event">Event</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Audience</label>
+
+                    <select id="announcementAudience">
+
+                        <option value="all">
+                            Students & Staff
+                        </option>
+
+                        <option value="students">
+                            Students
+                        </option>
+
+                        <option value="staff">
+                            Staff
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Message <span>*</span></label>
+
+                <textarea id="announcementMessage"
+                          rows="6"
+                          required
+                          placeholder="Write announcement..."></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Attachment</label>
+
+                <input type="file"
+                       id="announcementAttachment">
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="button"
+                        class="secondary-btn"
+                        id="cancelAnnouncement">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="primary-btn">
+                    Publish Announcement
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     STUDENT MODAL
+========================= -->
+
+<div class="modal-overlay" id="studentModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2 id="studentModalTitle">Add Student</h2>
+                <p>Create or update a student record.</p>
+            </div>
+
+            <button class="close-btn"
+                    id="closeStudentModal">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="studentForm">
+
+            <input type="hidden" id="studentId">
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input id="studentName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Admission Number</label>
+                    <input id="studentAdmission" required>
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>Department</label>
+
+                    <select id="studentDepartment" required>
+
+                        <option value="">Select Department</option>
+                        <option>ICT</option>
+                        <option>Mechanical & Automotive</option>
+                        <option>Electrical</option>
+                        <option>Building & Civil Engineering</option>
+                        <option>Agriculture</option>
+                        <option>Cosmetology</option>
+                        <option>Fashion & Design</option>
+                        <option>Hospitality</option>
+                        <option>Business</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Email</label>
+                    <input type="email" id="studentEmail" required>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Status</label>
+
+                <select id="studentStatus">
+
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="button"
+                        class="secondary-btn"
+                        id="cancelStudent">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="primary-btn">
+                    Save Student
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     STAFF MODAL
+========================= -->
+
+<div class="modal-overlay" id="staffModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2 id="staffModalTitle">Add Staff</h2>
+                <p>Create or update a staff record.</p>
+            </div>
+
+            <button class="close-btn"
+                    id="closeStaffModal">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="staffForm">
+
+            <input type="hidden" id="staffId">
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input id="staffName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Position</label>
+                    <input id="staffPosition" required>
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>Department</label>
+
+                    <select id="staffDepartment" required>
+
+                        <option value="">Select Department</option>
+                        <option>ICT</option>
+                        <option>Mechanical & Automotive</option>
+                        <option>Electrical</option>
+                        <option>Building & Civil Engineering</option>
+                        <option>Agriculture</option>
+                        <option>Cosmetology</option>
+                        <option>Fashion & Design</option>
+                        <option>Hospitality</option>
+                        <option>Business</option>
+                        <option>Administration</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Email</label>
+                    <input type="email" id="staffEmail" required>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Status</label>
+
+                <select id="staffStatus">
+
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="button"
+                        class="secondary-btn"
+                        id="cancelStaff">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="primary-btn">
+                    Save Staff
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     MESSAGE MODAL
+========================= -->
+
+<div class="modal-overlay" id="messageModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>New Message</h2>
+                <p>Send internal communication.</p>
+            </div>
+
+            <button class="close-btn"
+                    id="closeMessageModal">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="messageForm">
+
+            <div class="form-group">
+
+                <label>Recipient</label>
+
+                <select id="messageRecipient">
+
+                    <option>All Students</option>
+                    <option>All Staff</option>
+                    <option>Principal</option>
+                    <option>Registrar</option>
+                    <option>Dean</option>
+                    <option>Heads of Department</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Subject</label>
+
+                <input id="messageSubject"
+                       required
+                       placeholder="Message subject">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Message</label>
+
+                <textarea id="messageBody"
+                          rows="7"
+                          required
+                          placeholder="Write your message..."></textarea>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="button"
+                        class="secondary-btn"
+                        id="cancelMessage">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="primary-btn">
+                    Send Message
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     ACCOUNT MODAL
+========================= -->
+
+<div class="modal-overlay" id="accountModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Add Portal Account</h2>
+                <p>Create a user with a specific role.</p>
+            </div>
+
+            <button class="close-btn"
+                    id="closeAccountModal">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="accountForm">
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input id="accountName" required>
+            </div>
+
+
+            <div class="form-group">
+                <label>Username</label>
+                <input id="accountUsername" required>
+            </div>
+
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password"
+                       id="accountPassword"
+                       required>
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Role</label>
+
+                <select id="accountRole">
+
+                    <option value="Administrator">
+                        Administrator
+                    </option>
+
+                    <option value="Communication Officer">
+                        Communication Officer
+                    </option>
+
+                    <option value="Registrar">
+                        Registrar
+                    </option>
+
+                    <option value="Dean">
+                        Dean
+                    </option>
+
+                    <option value="HOD">
+                        Head of Department
+                    </option>
+
+                    <option value="Staff">
+                        Staff
+                    </option>
+
+                    <option value="Student">
+                        Student
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="button"
+                        class="secondary-btn"
+                        id="cancelAccount">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="primary-btn">
+                    Create Account
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TOAST
+========================= -->
+
+<div id="toast" class="toast">
+
+    <span id="toastIcon">✓</span>
+
+    <span id="toastMessage">
+        Success
+    </span>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
