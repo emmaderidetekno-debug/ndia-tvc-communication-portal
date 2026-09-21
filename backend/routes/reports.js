@@ -39,6 +39,27 @@ router.get('/summary', (req, res) => {
   });
 });
 
+
+router.get('/deliveries', (req, res) => {
+  const requestedStatus = String(req.query.status || 'all').toLowerCase();
+  const limit = Math.min(Math.max(Number(req.query.limit || 200), 1), 500);
+
+  let where = '';
+  if (requestedStatus === 'failed') where = "WHERE status = 'Failed'";
+  if (requestedStatus === 'successful') where = "WHERE status IN ('Sent', 'Simulated')";
+
+  const rows = db.prepare(`
+    SELECT id, type, reference_id, recipient_name, recipient_email, recipient_type,
+           status, provider_message_id, error_message, created_at
+    FROM deliveries
+    ${where}
+    ORDER BY id DESC
+    LIMIT ?
+  `).all(limit);
+
+  res.json(rows);
+});
+
 router.get('/deliveries.csv', (req, res) => {
   const rows = db.prepare(`
     SELECT id, type, reference_id, recipient_name, recipient_email, recipient_type, status, provider_message_id, error_message, created_at
