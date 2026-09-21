@@ -14,14 +14,14 @@ fs.mkdirSync(uploadDir, { recursive: true });
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadDir),
   filename: (_req, file, cb) => {
-    const safe = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const safe = path.basename(file.originalname).replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 120);
     cb(null, `${Date.now()}-${safe}`);
   }
 });
 
 const upload = multer({
   storage,
-  limits: { fileSize: 8 * 1024 * 1024 },
+  limits: { fileSize: 8 * 1024 * 1024, files: 1 },
   fileFilter: (_req, file, cb) => {
     const allowed = ['application/pdf', 'image/png', 'image/jpeg', 'text/plain'];
     if (!allowed.includes(file.mimetype)) return cb(new Error('Only PDF, PNG, JPG and TXT attachments are allowed.'));
@@ -44,8 +44,23 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', allowRoles('Administrator', 'Communication Officer'), upload.single('attachment'), async (req, res) => {
-  const { title, category = 'general', audience = 'all', message } = req.body;
-  if (!title || !message) return res.status(400).json({ error: 'Title and message are required.' });
+  const title = String(req.body?.title || '').trim();
+  const category = String(req.body?.category || 'general').trim().toLowerCase();
+  const audience = String(req.body?.audience || 'all').trim().toLowerCase();
+  const message = String(req.body?.message || '').trim();
+
+  if (!title || !message) {
+    if (req.file?.path) try { fs.unlinkSync(req.file.path); } catch {}
+    return res.status(400).json({ error: 'Title and message are required.' });
+  }
+  if (title.length > 200 || message.length > 10000) {
+    if (req.file?.path) try { fs.unlinkSync(req.file.path); } catch {}
+    return res.status(400).json({ error: 'Title or message is too long.' });
+  }
+  if (!['all', 'students', 'staff'].includes(audience)) {
+    if (req.file?.path) try { fs.unlinkSync(req.file.path); } catch {}
+    return res.status(400).json({ error: 'Invalid audience.' });
+  }
 
   const attachmentPath = req.file ? req.file.path : null;
   const attachmentName = req.file ? req.file.originalname : null;
@@ -53,7 +68,7 @@ router.post('/', allowRoles('Administrator', 'Communication Officer'), upload.si
   const info = db.prepare(`
     INSERT INTO announcements (title, category, audience, message, attachment_name, attachment_path, created_by, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(title.trim(), category, audience, message.trim(), attachmentName, attachmentPath, req.user.id, now());
+  `).run(title, category || 'general', audience, message, attachmentName, attachmentPath, req.user.id, now());
 
   const announcementId = Number(info.lastInsertRowid);
   let recipients = [];
@@ -74,8 +89,8 @@ router.post('/', allowRoles('Administrator', 'Communication Officer'), upload.si
     try {
       const result = await sendPortalEmail({
         to: recipient.email,
-        subject: `[Ndia TVC] ${title.trim()}`,
-        text: `${message.trim()}\n\nThis communication was sent through the Ndia TVC Communication Portal prototype.`,
+        subject: `[Ndia TVC] ${title}`,
+        text: `${message}\n\nThis communication was sent through the Ndia TVC Communication Portal prototype.`,
         attachmentPath,
         attachmentName
       });
@@ -103,7 +118,6 @@ router.delete('/:id', allowRoles('Administrator', 'Communication Officer'), (req
   }
   res.json({ success: true });
 });
-
 
 router.get('/:id/attachment', (req, res) => {
   const row = db.prepare('SELECT attachment_name, attachment_path FROM announcements WHERE id = ?').get(req.params.id);
