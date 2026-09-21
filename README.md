@@ -48,3 +48,4 @@ SMTP_USER=your-email@example.com
 SMTP_PASS=your-app-password
 EMAIL_FROM="Ndia TVC Communication Portal <your-email@example.com>"
 
+C:\Users\ADMIN\Desktop\PROJECTRIVER\ndia-tvc-communication-portal>
