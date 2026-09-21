@@ -7,10 +7,10 @@ function authenticate(req, res, next) {
   if (!token) return res.status(401).json({ error: 'Authentication required.' });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
-      algorithms: ['HS256']
+    req.user = jwt.verify(token, process.env.JWT_SECRET, {
+      algorithms: ['HS256'],
+      issuer: 'ndia-tvc-communication-portal'
     });
-    req.user = decoded;
     next();
   } catch {
     return res.status(401).json({ error: 'Session expired or invalid.' });
