@@ -6,6 +6,21 @@ const { sendPortalEmail } = require('../services/emailService');
 const router = express.Router();
 router.use(authenticate);
 
+function resolveRecipients(recipient) {
+  const value = String(recipient || '').trim();
+
+  if (value === 'All Students') return db.prepare(`SELECT name, email, 'Student' AS recipient_type FROM students WHERE status='Active'`).all();
+  if (value === 'All Staff') return db.prepare(`SELECT name, email, 'Staff' AS recipient_type FROM staff WHERE status='Active'`).all();
+  if (value === 'Heads of Department') return db.prepare(`SELECT name, email, 'Staff' AS recipient_type FROM staff WHERE status='Active' AND position LIKE '%Head%'`).all();
+  if (['Principal', 'Registrar', 'Dean'].includes(value)) {
+    return db.prepare(`SELECT name, email, 'Staff' AS recipient_type FROM staff WHERE status='Active' AND position LIKE ?`).all(`%${value}%`);
+  }
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+    return [{ name: value, email: value, recipient_type: 'Direct' }];
+  }
+  return [];
+}
+
 router.get('/', (req, res) => {
   res.json(db.prepare(`
     SELECT m.*, a.name AS author_name
@@ -15,33 +30,25 @@ router.get('/', (req, res) => {
   `).all());
 });
 
-function resolveRecipients(recipient) {
-  if (recipient === 'All Students') {
-    return db.prepare(`SELECT name, email, 'Student' AS recipient_type FROM students WHERE status='Active'`).all();
-  }
-  if (recipient === 'All Staff') {
-    return db.prepare(`SELECT name, email, 'Staff' AS recipient_type FROM staff WHERE status='Active'`).all();
-  }
-  if (recipient === 'Heads of Department') {
-    return db.prepare(`SELECT name, email, 'Staff' AS recipient_type FROM staff WHERE status='Active' AND position LIKE '%Head%'`).all();
-  }
-  if (recipient === 'Principal' || recipient === 'Registrar' || recipient === 'Dean') {
-    return db.prepare(`SELECT name, email, 'Staff' AS recipient_type FROM staff WHERE status='Active' AND position LIKE ?`).all(`%${recipient}%`);
-  }
-  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
-    return [{ name: recipient, email: recipient, recipient_type: 'Direct' }];
-  }
-  return [];
-}
-
 router.post('/', allowRoles('Administrator', 'Communication Officer'), async (req, res) => {
-  const { recipient, subject, body } = req.body;
-  if (!recipient || !subject || !body) return res.status(400).json({ error: 'Recipient, subject and message are required.' });
+  const recipient = String(req.body?.recipient || '').trim();
+  const subject = String(req.body?.subject || '').trim();
+  const body = String(req.body?.body || '').trim();
+
+  if (!recipient || !subject || !body) {
+    return res.status(400).json({ error: 'Recipient, subject and message are required.' });
+  }
+  if (subject.length > 200 || body.length > 10000) {
+    return res.status(400).json({ error: 'Subject or message is too long.' });
+  }
 
   const info = db.prepare(`INSERT INTO messages (recipient, subject, body, created_by, created_at) VALUES (?, ?, ?, ?, ?)`)
-    .run(recipient, subject.trim(), body.trim(), req.user.id, now());
+    .run(recipient, subject, body, req.user.id, now());
+
   const messageId = Number(info.lastInsertRowid);
   const recipients = resolveRecipients(recipient);
+  if (!recipients.length) return res.status(400).json({ error: 'No valid recipients were found.' });
+
   const insertDelivery = db.prepare(`
     INSERT INTO deliveries (type, reference_id, recipient_name, recipient_email, recipient_type, status, provider_message_id, error_message, created_at)
     VALUES ('message', ?, ?, ?, ?, ?, ?, ?, ?)
