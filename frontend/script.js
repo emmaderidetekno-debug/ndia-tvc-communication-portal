@@ -12,6 +12,7 @@ let staff = [];
 let messages = [];
 let accounts = [];
 let reportSummary = null;
+let deliveryReportFilter = 'all';
 
 const $ = id => document.getElementById(id);
 const loginScreen = $('loginScreen');
@@ -524,6 +525,51 @@ function updateStatistics() {
   $('notificationBadge').textContent = (summary.failedDeliveries || 0) || announcements.length;
 }
 
+function renderDeliveryReport() {
+  if (!$('deliveryReportBody')) return;
+
+  const summary = reportSummary || {};
+  const deliveries = Array.isArray(summary.recentDeliveries) ? summary.recentDeliveries : [];
+
+  $('deliveryTotalCount').textContent = summary.deliveries ?? deliveries.length;
+  $('deliverySuccessCount').textContent = summary.successfulDeliveries ?? 0;
+  $('deliveryFailedCount').textContent = summary.failedDeliveries ?? 0;
+  $('deliveryRateCount').textContent = `${summary.deliveryRate ?? 0}%`;
+
+  const filtered = deliveries.filter(item => {
+    if (deliveryReportFilter === 'failed') return item.status === 'Failed';
+    if (deliveryReportFilter === 'successful') return ['Sent', 'Simulated'].includes(item.status);
+    return true;
+  });
+
+  $('deliveryReportBody').innerHTML = filtered.length ? filtered.map(item => {
+    const successful = ['Sent', 'Simulated'].includes(item.status);
+    const statusClass = successful ? 'success' : 'inactive';
+    const reason = item.status === 'Failed'
+      ? (item.error_message || 'No failure reason was recorded.')
+      : '—';
+    const recipient = item.recipient_name
+      ? `${escapeHTML(item.recipient_name)}<small>${escapeHTML(item.recipient_email || '')}</small>`
+      : escapeHTML(item.recipient_email || 'Unknown recipient');
+
+    return `<tr>
+      <td class="delivery-recipient">${recipient}</td>
+      <td>${escapeHTML(item.type || 'delivery')}</td>
+      <td><span class="badge ${statusClass}">${escapeHTML(item.status)}</span></td>
+      <td class="delivery-error ${item.status === 'Failed' ? 'has-error' : ''}">${escapeHTML(reason)}</td>
+      <td>${item.created_at ? new Date(item.created_at).toLocaleString('en-KE') : '—'}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="5"><div class="empty-state"><div>📭</div><h3>No deliveries found</h3><p>No records match this filter.</p></div></td></tr>`;
+}
+
+document.querySelectorAll('[data-delivery-filter]').forEach(button => {
+  button.addEventListener('click', () => {
+    deliveryReportFilter = button.dataset.deliveryFilter || 'all';
+    document.querySelectorAll('[data-delivery-filter]').forEach(item => item.classList.toggle('active', item === button));
+    renderDeliveryReport();
+  });
+});
+
 $('generateReportBtn').addEventListener('click', () => {
   const s = reportSummary || {};
   const rows = [
@@ -538,7 +584,7 @@ $('generateReportBtn').addEventListener('click', () => {
   URL.revokeObjectURL(url); showToast('Communication report downloaded.');
 });
 
-function renderAll() { renderAnnouncements(); renderStudents(); renderStaff(); renderMessages(); renderAccounts(); updateStatistics(); }
+function renderAll() { renderAnnouncements(); renderStudents(); renderStaff(); renderMessages(); renderAccounts(); updateStatistics(); renderDeliveryReport(); }
 
 (async function start() {
   await checkHealth();
