@@ -1212,8 +1212,8 @@
         <div class="modal-header">
 
             <div>
-                <h2>New Message</h2>
-                <p>Send internal communication.</p>
+                <h2>Send Email</h2>
+                <p>Send a real email through the configured SMTP service.</p>
             </div>
 
             <button class="close-btn"
@@ -1228,18 +1228,21 @@
 
             <div class="form-group">
 
-                <label>Recipient</label>
+                <label>Recipient Email / Group</label>
 
-                <select id="messageRecipient">
+                <input id="messageRecipient"
+                       list="messageRecipientOptions"
+                       required
+                       placeholder="name@example.com or select a group">
+                <datalist id="messageRecipientOptions">
 
-                    <option>All Students</option>
-                    <option>All Staff</option>
-                    <option>Principal</option>
-                    <option>Registrar</option>
-                    <option>Dean</option>
-                    <option>Heads of Department</option>
-
-                </select>
+                    <option value="All Students"></option>
+                    <option value="All Staff"></option>
+                    <option value="Principal"></option>
+                    <option value="Registrar"></option>
+                    <option value="Dean"></option>
+                    <option value="Heads of Department"></option>
+                </datalist>
 
             </div>
 
@@ -1277,7 +1280,7 @@
 
                 <button type="submit"
                         class="primary-btn">
-                    Send Message
+                    Send Email
                 </button>
 
             </div>
