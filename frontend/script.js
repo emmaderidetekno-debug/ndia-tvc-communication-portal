@@ -425,29 +425,52 @@ $('staffSearch').addEventListener('input', renderStaff);
 $('staffDepartmentFilter').addEventListener('change', renderStaff);
 
 /* MESSAGES */
-$('newMessageBtn').addEventListener('click', () => openModal('messageModal'));
+$('newMessageBtn').addEventListener('click', () => {
+  if (!canManageContent()) return showToast('Your account cannot send email.', '!');
+  $('messageModal').querySelector('h2').textContent = 'Send Email';
+  $('messageModal').querySelector('.modal-header p').textContent = 'Send a real email through the configured SMTP service.';
+  openModal('messageModal');
+});
 $('closeMessageModal').addEventListener('click', () => closeModal('messageModal'));
 $('cancelMessage').addEventListener('click', () => closeModal('messageModal'));
+
 $('messageForm').addEventListener('submit', async event => {
   event.preventDefault();
-  const data = { recipient: $('messageRecipient').value, subject: $('messageSubject').value.trim(), body: $('messageBody').value.trim() };
+  if (!canManageContent()) return showToast('Your account cannot send email.', '!');
+  const data = {
+    recipient: $('messageRecipient').value.trim(),
+    subject: $('messageSubject').value.trim(),
+    body: $('messageBody').value.trim()
+  };
   try {
     const result = await api('/messages', { method: 'POST', body: JSON.stringify(data) });
-    $('messageForm').reset(); closeModal('messageModal'); await loadAll();
-    showToast(`Message recorded · ${result.recipients} recipient(s).`);
-  } catch (error) { showToast(error.message, '!'); }
+    $('messageForm').reset();
+    closeModal('messageModal');
+    await loadAll();
+    const successful = Number(result.successful || 0);
+    const failed = Number(result.failed || 0);
+    showToast(
+      failed ? `Email attempted · ${successful} sent · ${failed} failed.` : `Email sent successfully · ${successful} recipient(s).`
+    );
+  } catch (error) {
+    showToast(error.message, '!');
+  }
 });
 
 function renderMessages() {
   $('messageList').innerHTML = messages.length ? messages.map(message => `<div class="message-item" onclick="showMessage(${message.id})">
-    <strong>${escapeHTML(message.subject)}</strong><span>To: ${escapeHTML(message.recipient)}</span><span>${new Date(message.created_at).toLocaleString('en-KE')}</span></div>`).join('')
-    : `<div class="empty-state"><div>✉</div><h3>No messages</h3><p>Messages will appear here.</p></div>`;
+    <strong>${escapeHTML(message.subject)}</strong>
+    <span>To: ${escapeHTML(message.recipient)}</span>
+    <span>${new Date(message.created_at).toLocaleString('en-KE')}</span>
+  </div>`).join('')
+    : `<div class="empty-state"><div>✉</div><h3>No emails sent yet</h3><p>Sent emails will appear here.</p></div>`;
 }
 function showMessage(id) {
   const message = messages.find(item => item.id === id); if (!message) return;
   $('messageInfo').innerHTML = `<div class="panel-header"><div><h3>${escapeHTML(message.subject)}</h3><p>${new Date(message.created_at).toLocaleString('en-KE')}</p></div></div>
   <div style="padding:25px"><p style="font-size:11px;color:#718096;margin-bottom:18px">To: ${escapeHTML(message.recipient)}</p>
-  <p style="font-size:13px;line-height:1.8;white-space:pre-wrap">${escapeHTML(message.body)}</p></div>`;
+  <p style="font-size:13px;line-height:1.8;white-space:pre-wrap">${escapeHTML(message.body)}</p>
+  <p style="margin-top:20px;font-size:12px;color:#4a5568">Delivery status is available in Reports.</p></div>`;
 }
 window.showMessage = showMessage;
 
