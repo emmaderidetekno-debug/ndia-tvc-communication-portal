@@ -794,6 +794,45 @@
 
             </div>
 
+            <div class="panel delivery-report-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h3>Delivery Status</h3>
+                        <p>Review successful and failed email deliveries, including failure reasons.</p>
+                    </div>
+                </div>
+
+                <div class="delivery-report-summary">
+                    <div><span>Total</span><strong id="deliveryTotalCount">0</strong></div>
+                    <div><span>Successful</span><strong id="deliverySuccessCount">0</strong></div>
+                    <div><span>Failed</span><strong id="deliveryFailedCount">0</strong></div>
+                    <div><span>Rate</span><strong id="deliveryRateCount">0%</strong></div>
+                </div>
+
+                <div class="delivery-filter-tabs" id="deliveryFilterTabs">
+                    <button type="button" class="delivery-filter-btn active" data-delivery-filter="all">All</button>
+                    <button type="button" class="delivery-filter-btn" data-delivery-filter="successful">Successful</button>
+                    <button type="button" class="delivery-filter-btn" data-delivery-filter="failed">Failed</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="delivery-table">
+                        <thead>
+                            <tr>
+                                <th>Recipient</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Failure Reason</th>
+                                <th>Date / Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deliveryReportBody"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
         </section>
 
 
