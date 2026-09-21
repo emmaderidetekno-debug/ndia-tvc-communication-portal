@@ -42,28 +42,34 @@ router.post('/', allowRoles('Administrator', 'Communication Officer'), async (re
     return res.status(400).json({ error: 'Subject or message is too long.' });
   }
 
+  const recipients = resolveRecipients(recipient);
+  if (!recipients.length) return res.status(400).json({ error: 'No valid recipients were found.' });
+
   const info = db.prepare(`INSERT INTO messages (recipient, subject, body, created_by, created_at) VALUES (?, ?, ?, ?, ?)`)
     .run(recipient, subject, body, req.user.id, now());
 
   const messageId = Number(info.lastInsertRowid);
-  const recipients = resolveRecipients(recipient);
-  if (!recipients.length) return res.status(400).json({ error: 'No valid recipients were found.' });
 
   const insertDelivery = db.prepare(`
     INSERT INTO deliveries (type, reference_id, recipient_name, recipient_email, recipient_type, status, provider_message_id, error_message, created_at)
     VALUES ('message', ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
+  let successful = 0;
+  let failed = 0;
+
   for (const target of recipients) {
     try {
       const result = await sendPortalEmail({ to: target.email, subject, text: body });
       insertDelivery.run(messageId, target.name, target.email, target.recipient_type, result.status, result.messageId, null, now());
+      successful += 1;
     } catch (error) {
       insertDelivery.run(messageId, target.name, target.email, target.recipient_type, 'Failed', null, error.message, now());
+      failed += 1;
     }
   }
 
-  res.status(201).json({ message: db.prepare('SELECT * FROM messages WHERE id = ?').get(messageId), recipients: recipients.length });
+  res.status(201).json({ message: db.prepare('SELECT * FROM messages WHERE id = ?').get(messageId), recipients: recipients.length, successful, failed });
 });
 
 module.exports = router;
