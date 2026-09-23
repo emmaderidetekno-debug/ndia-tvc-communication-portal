@@ -1,4 +1,4 @@
-# Ndia TVC Communication Portal — Functional Prototype V3
+Ndia TVC Communication Portal
 
 
 INCLUSIVE;
@@ -30,3 +30,8 @@ SMTP_PASS=your-app-password
 EMAIL_FROM=
 
 C:\Users\ADMIN\Desktop\PROJECTRIVER\ndia-tvc-communication-portal>
+
+
+
+
+
