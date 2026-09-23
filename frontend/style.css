@@ -1204,3 +1204,121 @@ textarea:focus {
         flex-wrap: wrap;
     }
 }
+
+
+/* ========================================
+   OFFICIAL NDIA TVC PRESENTATION POLISH
+   Institutional navy + green + white
+======================================== */
+
+:root {
+    --primary: #0b7a3b;
+    --primary-dark: #075a2c;
+    --dark: #06284a;
+    --navy: #06284a;
+    --navy-soft: #0d416f;
+    --background: #f2f6f4;
+    --border: #d9e4df;
+    --text: #243746;
+    --muted: #6b7c88;
+    --green-soft: #e8f5ed;
+}
+
+body {
+    background: var(--background);
+}
+
+.login-screen {
+    background:
+        radial-gradient(circle at 15% 15%, rgba(11,122,59,.22), transparent 28%),
+        radial-gradient(circle at 85% 85%, rgba(13,65,111,.28), transparent 32%),
+        linear-gradient(135deg, #041d36 0%, #06284a 58%, #0a4a43 100%);
+}
+
+.login-card {
+    border-top: 5px solid var(--primary);
+}
+
+.login-logo,
+.brand-icon {
+    overflow: hidden;
+    background: #fff;
+    border: 3px solid rgba(11,122,59,.18);
+}
+
+.login-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 7px;
+    display: block;
+}
+
+.brand-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 5px;
+    display: block;
+}
+
+.login-logo.logo-fallback,
+.brand-icon.logo-fallback {
+    background: linear-gradient(135deg, var(--primary), #15934d);
+    color: #fff;
+}
+
+.sidebar {
+    background: linear-gradient(180deg, #041d36 0%, #06284a 68%, #073a3c 100%);
+}
+
+.nav-item.active {
+    background: linear-gradient(90deg, var(--primary), #15934d);
+}
+
+.primary-btn {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.primary-btn:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.welcome-small,
+.text-btn,
+.announcement-title {
+    color: var(--primary);
+}
+
+.topbar {
+    border-bottom: 3px solid rgba(11,122,59,.18);
+}
+
+.category-badge {
+    background: var(--green-soft);
+    color: var(--primary-dark);
+}
+
+.bar-fill {
+    background: linear-gradient(90deg, var(--primary), #23a65b);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(11,122,59,.08);
+}
+
+.status-dot {
+    background: #32c76b;
+}
+
+@media(max-width:520px) {
+    .login-logo {
+        width: 72px;
+        height: 72px;
+    }
+}
