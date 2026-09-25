@@ -1322,3 +1322,157 @@ textarea:focus {
         height: 72px;
     }
 }
+
+
+/* ========================================
+   NDIA TVC SCHOOL COLOUR THEME
+   Blue + Green + White
+   Applied without changing functionality
+======================================== */
+
+:root {
+    --primary: #07983f;
+    --primary-dark: #05732f;
+    --dark: #063b73;
+    --navy: #063b73;
+    --navy-soft: #075aa8;
+    --text: #17324d;
+    --muted: #647789;
+    --border: #d8e4ec;
+    --background: #f1f6fa;
+    --green-soft: #e7f6ed;
+}
+
+/* Overall application background */
+body {
+    background: var(--background);
+}
+
+/* Login: school-blue field with green accents */
+.login-screen {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(7,152,63,.28), transparent 28%),
+        radial-gradient(circle at 85% 80%, rgba(7,90,168,.30), transparent 32%),
+        linear-gradient(135deg, #032d5b 0%, #063b73 58%, #075aa8 100%);
+}
+
+.login-card {
+    border-top: 5px solid var(--primary);
+}
+
+/* Keep the existing N fallback, but make it school-branded */
+.login-logo,
+.brand-icon {
+    background: linear-gradient(135deg, #07983f, #0878bd);
+    border-color: rgba(255,255,255,.18);
+    color: #fff;
+}
+
+/* Sidebar */
+.sidebar {
+    background: linear-gradient(180deg, #032d5b 0%, #063b73 68%, #07558f 100%);
+}
+
+.brand {
+    border-bottom-color: rgba(255,255,255,.12);
+}
+
+.brand span {
+    color: #b9d0e5;
+}
+
+/* Navigation */
+.nav-item {
+    color: #c2d4e5;
+}
+
+.nav-item:hover {
+    background: rgba(255,255,255,.09);
+    color: #fff;
+}
+
+.nav-item.active {
+    background: linear-gradient(90deg, #07983f, #08ad49);
+    box-shadow: 0 7px 18px rgba(7,152,63,.25);
+}
+
+/* Main header */
+.topbar {
+    border-bottom: 3px solid rgba(7,152,63,.20);
+}
+
+.welcome-small {
+    color: var(--primary);
+}
+
+.topbar h1,
+.section-heading h2,
+.panel-header h3,
+.stat-card strong,
+.login-card h1 {
+    color: var(--dark);
+}
+
+/* Buttons */
+.primary-btn {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.primary-btn:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.text-btn,
+.announcement-title {
+    color: var(--primary);
+}
+
+/* Cards and content */
+.stat-card,
+.panel,
+.search-box,
+.modal,
+.login-card {
+    border-color: var(--border);
+}
+
+.stat-card:hover {
+    border-top-color: var(--primary);
+}
+
+.quick-action:hover {
+    background: #edf7f1;
+    border-color: #c8e4d4;
+}
+
+/* Form focus */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(7,152,63,.09);
+}
+
+/* School-green report bars */
+.bar-fill {
+    background: linear-gradient(90deg, #07983f, #08ad49);
+}
+
+/* Badges */
+.category-badge {
+    background: var(--green-soft);
+    color: var(--primary-dark);
+}
+
+/* Active report filters */
+.delivery-filter-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Status */
+.status-dot {
+    background: #21c763;
+}
